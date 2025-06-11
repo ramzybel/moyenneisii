@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calcul Moyenne Master ISII</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    /* Fixer la largeur minimale des colonnes pour Exam, TD, TP */
+    .input-column {
+      min-width: 80px;
+    }
+    /* Assurer que le tableau reste scrollable sur petits écrans */
+    .table-container {
+      overflow-x: auto;
+    }
+    /* Style pour l'exportation PDF */
+    @media print {
+      .table-container {
+        overflow-x: visible !important;
+      }
+      table {
+        width: 100%;
+        table-layout: auto;
+      }
+      .input-column {
+        min-width: 50px; /* Réduire légèrement pour l'exportation */
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-100 font-sans">
+  <div class="container mx-auto p-4">
+    <h1 class="text-2xl font-bold text-center mb-6">Calcul de la Moyenne - Master ISII</h1>
+    
+    <div id="releve">
+      <!-- Semestre 1 -->
+      <div class="flex items-center mb-4">
+        <h2 class="text-xl font-semibold">Semestre 1</h2>
+        <div class="ml-6">
+          <span id="semestre1-moyenne" class="font-semibold"></span>
+          <span id="semestre1-credits" class="font-semibold ml-4"></span>
+        </div>
+      </div>
+      <div class="table-container">
+        <table class="w-full border-collapse border border-gray-300 mb-6">
+          <thead>
+            <tr class="bg-gray-200">
+              <th class="border border-gray-300 p-2">Unité</th>
+              <th class="border border-gray-300 p-2">Module</th>
+              <th class="border border-gray-300 p-2 input-column">Exam</th>
+              <th class="border border-gray-300 p-2 input-column">TD</th>
+              <th class="border border-gray-300 p-2 input-column">TP</th>
+              <th class="border border-gray-300 p-2">Moyenne</th>
+              <th class="border border-gray-300 p-2">Coefficient</th>
+              <th class="border border-gray-300 p-2">Crédits</th>
+              <th class="border border-gray-300 p-2">Moyenne Unité</th>
+              <th class="border border-gray-300 p-2">Crédits Unité</th>
+            </tr>
+          </thead>
+          <tbody id="semestre1-table">
+            <!-- UEF 1 -->
+            <tr><td rowspan="2" class="border border-gray-300 p-2">UEF 1</td><td class="border border-gray-300 p-2">Architecture Logicielle</td><td class="border border-gray-300 p-2 input-column"><input type="number" min="0" max="20" step="0.01" class="w-full p-1" id="arch-log-exam"></td><td class="border border-gray-300 p-2 input-column"><input type="number" min="0" max="20" step="0.01" class="w-full p-1" id="arch-log-td"></td><td class="border border-gray-300 p-2 input-column"><input type="number" min="0" max="20" step="0.01" class="w-full p-1" id="arch-log-tp"></td><td class="border border-gray-300 p-2" id="arch-log-moy"></td><td class="border border-gray-300 p-2">3</td><td class="border border-gray-300 p-2">6</td><td rowspan="2" class="border border-gray-300 p-2" id="uef1-moy"></td><td rowspan="2" class="border border-gray-300 p-2" id="uef1-credits"></td></tr>
+            <tr><td class="border border-gray-300 p-2">Réseaux Avancés</td><td class="border border-gray-300 p-2 input-column"><input type="number" min="0" max="20" step="0.01" class="w-full p-1" id="reseaux-exam"></td><td class="border border-gray-300 p-2 input-column">-</td><td class="border border-gray-300 p-2 input-column"><input type="number" min="0" max="20" step="0.01" class="w-full p-1" id="reseaux-tp"></td><td class="border border-gray-300 p-2" id="reseaux-moy"></td><td class="border border-gray-300 p-2">2</td><td class="border border-gray-300 p-2">4</td></tr>
+            <!-- UEF 2 -->
+            <tr><td rowspan="2" class="border border-gray-300 p-2">UEF 2</td><td class="border border-gray-300 p-2">IA Apprentissage Automatique</td><td class="border border-gray-300 p-2 input-column"><input type="number" min="0" max="20" step="0.01" class="w-full p-1" id="ia-exam"></td><td class="border border-gray-300 p-2 input-column">-</td><td class="border border-gray-300 p-2 input-column"><input type="number" min="0" max="20" step="0.01" class="w-full p-1" id="ia-tp"></td><td class="border border-gray-300 p-2" id="ia-moy"></td><td class="border border-gray-300 p-2">3</td><td class="border border-gray-300 p-2">4</td><td rowspan="2" class="border border-gray-300 p-2" id="uef2-moy"></td><td rowspan="2" class="border border-gray-300 p-2" id="uef2-credits"></td></tr>
+            <tr><td class="border border-gray-300 p-2">Analyse Stat de Données</td><td class="border border-gray-300 p-2 input-column"><input type="number" min="0" max="20" step="0.01" class="w-full p-1" id="stat-exam"></td><td class="border border-gray-300 p-2 input-column"><input type="number" min="0" max="20" step="0.01" class="w-full p-1" id="stat-td"></td><td class="border border-gray-300 p-2 input-column">-</td><td class="border border-gray-300 p-2" id="stat-moy"></td><td class="border border-gray-300 p-2">2</td><td class="border border-gray-300 p-2">4</td></tr>
+            <!-- UEM 1 -->
+            <tr><td rowspan="2" class="border border-gray-300 p-2">UEM 1</td><td class="border border-gray-300 p-2">Multimedia</td><td class="border border-gray-300 p-2 input-column"><input type="number" min="0" max="20" step="0.01" class="w-full p-1" id="multimedia-exam"></td><td class="border border-gray-300 p-2 input-column">-</td><td class="border border-gray-300 p-2 input-column"><input type="number" min="0" max="20" step="0.01" class="w-full p-1" id="multimedia-tp"></td><td class="border border-gray-300 p-2" id="multimedia-moy"></td><td class="border border-gray-300 p-2">2</td><td class="border border-gray-300 p-2">2</td><td rowspan="2" class="border border-gray-300 p-2" id="uem1-moy"></td><td rowspan="2" class="border border-gray-300 p-2" id="uem1-credits"></td></tr>
+            <tr><td class="border border-gray-300 p-2">Optimisation Combinatoire</td><td class="border border-gray-300 p-2 input-column"><input type="number" min="0" max="20" step="0.01" class="w-full p-1" id="optim-exam"></td><td class="border border-gray-300 p-2 input-column"><input type="number" min="0" max="20" step="0.01" class="w-full p-1" id="optim-td"></td><td class="border border-gray-300 p-2 input-column">-</td><td class="border border-gray-300 p-2" id="optim-moy"></td><td class="border border-gray-300 p-2">2</td><td class="border border-gray-300 p-2">3</td></tr>
+            <!-- UEM 2 -->
+            <tr><td rowspan="2" class="border border-gray-300 p-2">UEM 2</td><td class="border border-gray-300 p-2">Système d'Aide à la Décision</td><td class="border border-gray-300 p-2 input-column"><input type="number" min="0" max="20" step="0.01" class="w-full p-1" id="sad-exam"></td><td class="border border-gray-300 p-2 input-column">-</td><td class="border border-gray-300 p-2 input-column">-</td><td class="border border-gray-300 p-2" id="sad-moy"></td><td class="border border-gray-300 p-2">1</td><td class="border border-gray-300 p-2">2</td><td rowspan="2" class="border border-gray-300 p-2" id="uem2-moy"></td><td rowspan="2" class="border border-gray-300 p-2" id="uem2-credits"></td></tr>
+            <tr><td class="border border-gray-300 p-2">Méthodologies de Sécurité</td><td class="border border-gray-300 p-2 input-column"><input type="number" min="0" max="20" step="0.01" class="w-full p-1" id="secu-exam"></td><td class="border border-gray-300 p-2 input-column"><input type="number" min="0" max="20" step="0.01" class="w-full p-1" id="secu-td"></td><td class="border border-gray-300 p-2 input-column">-</td><td class="border border-gray-300 p-2" id="secu-moy"></td><td class="border border-gray-300 p-2">2</td><td class="border border-gray-300 p-2">2</td></tr>
+            <!-- UET 1 -->
+            <tr><td class="border border-gray-300 p-2">UET 1</td><td class="border border-gray-300 p-2">Traitement d'Images</td><td class="border border-gray-300 p-2 input-column"><input type="number" min="0" max="20" step="0.01" class="w-full p-1" id="img-exam"></td><td class="border border-gray-300 p-2 input-column">-</td><td class="border border-gray-300 p-2 input-column"><input type="number" min="0" max="20" step="0.01" class="w-full p-1" id="img-tp"></td><td class="border border-gray-300 p-2" id="img-moy"></td><td class="border border-gray-300 p-2">2</td><td class="border border-gray-300 p-2">3</td><td class="border border-gray-300 p-2" id="uet1-moy"></td><td class="border border-gray-300 p-2" id="uet1-credits"></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Semestre 2 -->
+      <div class="flex items-center mb-4">
+        <h2 class="text-xl font-semibold">Semestre 2</h2>
+        <div class="ml-6">
+          <span id="semestre2-moyenne" class="font-semibold"></span>
+          <span id="semestre2-credits" class="font-semibold ml-4"></span>
+        </div>
+      </div>
+      <div class="table-container">
+        <table class="w-full border-collapse border border-gray-300 mb-6">
+          <thead>
+            <tr class="bg-gray-200">
+              <th class="border border-gray-300 p-2">Unité</th>
+              <th class="border border-gray-300 p-2">Module</th>
+              <th class="border border-gray-300 p-2 input-column">Exam</th>
+              <th class="border border-gray-300 p-2 input-column">TD</th>
+              <th class="border border-gray-300 p-2 input-column">TP</th>
+              <th class="border border-gray-300 p-2">Moyenne</th>
+              <th class="border border-gray-300 p-2">Coefficient</th>
+              <th class="border border-gray-300 p-2">Crédits</th>
+              <th class="border border-gray-300 p-2">Moyenne Unité</th>
+              <th class="border border-gray-300 p-2">Crédits Unité</th>
+            </tr>
+          </thead>
+          <tbody id="semestre2-table">
+            <!-- UEF 3 -->
+            <tr><td rowspan="2" class="border border-gray-300 p-2">UEF 3</td><td class="border border-gray-300 p-2">J2EE</td><td class="border border-gray-300 p-2 input-column"><input type="number" min="0" max="20" step="0.01" class="w-full p-1" id="j2ee-exam"></td><td class="border border-gray-300 p-2 input-column">-</td><td class="border border-gray-300 p-2 input-column"><input type="number" min="0" max="20" step="0.01" class="w-full p-1" id="j2ee-tp"></td><td class="border border-gray-300 p-2" id="j2ee-moy"></td><td class="border border-gray-300 p-2">3</td><td class="border border-gray-300 p-2">5</td><td rowspan="2" class="border border-gray-300 p-2" id="uef3-moy"></td><td rowspan="2" class="border border-gray-300 p-2" id="uef3-credits"></td></tr>
+            <tr><td class="border border-gray-300 p-2">BDDA</td><td class="border border-gray-300 p-2 input-column"><input type="number" min="0" max="20" step="0.01" class="w-full p-1" id="bdda-exam"></td><td class="border border-gray-300 p-2 input-column">-</td><td class="border border-gray-300 p-2 input-column"><input type="number" min="0" max="20" step="0.01" class="w-full p-1" id="bdda-tp"></td><td class="border border-gray-300 p-2" id="bdda-moy"></td><td class="border border-gray-300 p-2">3</td><td class="border border-gray-300 p-2">4</td></tr>
+            <!-- UEF 4 -->
+            <tr><td rowspan="2" class="border border-gray-300 p-2">UEF 4</td><td class="border border-gray-300 p-2">Data Mining</td><td class="border border-gray-300 p-2 input-column"><input type="number" min="0" max="20" step="0.01" class="w-full p-1" id="data-mining-exam"></td><td class="border border-gray-300 p-2 input-column">-</td><td class="border border-gray-300 p-2 input-column"><input type="number" min="0" max="20" step="0.01" class="w-full p-1" id="data-mining-tp"></td><td class="border border-gray-300 p-2" id="data-mining-moy"></td><td class="border border-gray-300 p-2">3</td><td class="border border-gray-300 p-2">6</td><td rowspan="2" class="border border-gray-300 p-2" id="uef4-moy"></td><td rowspan="2" class="border border-gray-300 p-2" id="uef4-credits"></td></tr>
+            <tr><td class="border border-gray-300 p-2">Entrepôt de Données</td><td class="border border-gray-300 p-2 input-column"><input type="number" min="0" max="20" step="0.01" class="w-full p-1" id="entrepot-exam"></td><td class="border border-gray-300 p-2 input-column">-</td><td class="border border-gray-300 p-2 input-column"><input type="number" min="0" max="20" step="0.01" class="w-full p-1" id="entrepot-tp"></td><td class="border border-gray-300 p-2" id="entrepot-moy"></td><td class="border border-gray-300 p-2">2</td><td class="border border-gray-300 p-2">3</td></tr>
+            <!-- UEM 3 -->
+            <tr><td rowspan="3" class="border border-gray-300 p-2">UEM 3</td><td class="border border-gray-300 p-2">Cryptographie</td><td class="border border-gray-300 p-2 input-column"><input type="number" min="0" max="20" step="0.01" class="w-full p-1" id="crypto-exam"></td><td class="border border-gray-300 p-2 input-column"><input type="number" min="0" max="20" step="0.01" class="w-full p-1" id="crypto-td"></td><td class="border border-gray-300 p-2 input-column"><input type="number" min="0" max="20" step="0.01" class="w-full p-1" id="crypto-tp"></td><td class="border border-gray-300 p-2" id="crypto-moy"></td><td class="border border-gray-300 p-2">2</td><td class="border border-gray-300 p-2">3</td><td rowspan="3" class="border border-gray-300 p-2" id="uem3-moy"></td><td rowspan="3" class="border border-gray-300 p-2" id="uem3-credits"></td></tr>
+            <tr><td class="border border-gray-300 p-2">MEPS</td><td class="border border-gray-300 p-2 input-column"><input type="number" min="0" max="20" step="0.01" class="w-full p-1" id="meps-exam"></td><td class="border border-gray-300 p-2 input-column"><input type="number" min="0" max="20" step="0.01" class="w-full p-1" id="meps-td"></td><td class="border border-gray-300 p-2 input-column">-</td><td class="border border-gray-300 p-2" id="meps-moy"></td><td class="border border-gray-300 p-2">2</td><td class="border border-gray-300 p-2">3</td></tr>
+            <tr><td class="border border-gray-300 p-2">VPO</td><td class="border border-gray-300 p-2 input-column"><input type="number" min="0" max="20" step="0.01" class="w-full p-1" id="vpo-exam"></td><td class="border border-gray-300 p-2 input-column"><input type="number" min="0" max="20" step="0.01" class="w-full p-1" id="vpo-td"></td><td class="border border-gray-300 p-2 input-column">-</td><td class="border border-gray-300 p-2" id="vpo-moy"></td><td class="border border-gray-300 p-2">2</td><td class="border border-gray-300 p-2">3</td></tr>
+            <!-- UED 1 -->
+            <tr><td class="border border-gray-300 p-2">UED 1</td><td class="border border-gray-300 p-2">Culture d'entreprise</td><td class="border border-gray-300 p-2 input-column"><input type="number" min="0" max="20" step="0.01" class="w-full p-1" id="culture-exam"></td><td class="border border-gray-300 p-2 input-column">-</td><td class="border border-gray-300 p-2 input-column">-</td><td class="border border-gray-300 p-2" id="culture-moy"></td><td class="border border-gray-300 p-2">1</td><td class="border border-gray-300 p-2">2</td><td class="border border-gray-300 p-2" id="ued1-moy"></td><td class="border border-gray-300 p-2" id="ued1-credits"></td></tr>
+            <!-- UET 2 -->
+            <tr><td class="border border-gray-300 p-2">UET 2</td><td class="border border-gray-300 p-2">Anglais</td><td class="border border-gray-300 p-2 input-column"><input type="number" min="0" max="20" step="0.01" class="w-full p-1" id="anglais-exam"></td><td class="border border-gray-300 p-2 input-column">-</td><td class="border border-gray-300 p-2 input-column">-</td><td class="border border-gray-300 p-2" id="anglais-moy"></td><td class="border border-gray-300 p-2">1</td><td class="border border-gray-300 p-2">1</td><td class="border border-gray-300 p-2" id="uet2-moy"></td><td class="border border-gray-300 p-2" id="uet2-credits"></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Résultats -->
+      <div id="results" class="mt-6">
+        <h2 class="text-xl font-semibold mb-4">Résultats Annuels</h2>
+        <div id="annual-results" class="mb-4"></div>
+        <div id="rattrapage" class="mb-4"></div>
+      </div>
+    </div>
+
+    <div class="flex space-x-4">
+      <button onclick="calculate()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mb-6">Calculer</button>
+      <button onclick="exportToPDF()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mb-6">Exporter en PDF</button>
+      <button onclick="exportToJPG()" class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 mb-6">Exporter en JPG</button>
+    </div>
+  </div>
+
+  <script>
+    function calculate() {
+      const modules = [
+        // Semestre 1
+        { name: "Architecture Logicielle", unit: "UEF 1", exam: "arch-log-exam", td: "arch-log-td", tp: "arch-log-tp", moy: "arch-log-moy", coef: 3, credits: 6 },
+        { name: "Réseaux Avancés", unit: "UEF 1", exam: "reseaux-exam", tp: "reseaux-tp", moy: "reseaux-moy", coef: 2, credits: 4 },
+        { name: "IA Apprentissage Automatique", unit: "UEF 2", exam: "ia-exam", tp: "ia-tp", moy: "ia-moy", coef: 3, credits: 4 },
+        { name: "Analyse Stat de Données", unit: "UEF 2", exam: "stat-exam", td: "stat-td", moy: "stat-moy", coef: 2, credits: 4 },
+        { name: "Multimedia", unit: "UEM 1", exam: "multimedia-exam", tp: "multimedia-tp", moy: "multimedia-moy", coef: 2, credits: 2 },
+        { name: "Optimisation Combinatoire", unit: "UEM 1", exam: "optim-exam", td: "optim-td", moy: "optim-moy", coef: 2, credits: 3 },
+        { name: "Système d'Aide à la Décision", unit: "UEM 2", exam: "sad-exam", moy: "sad-moy", coef: 1, credits: 2 },
+        { name: "Méthodologies de Sécurité", unit: "UEM 2", exam: "secu-exam", td: "secu-td", moy: "secu-moy", coef: 2, credits: 2 },
+        { name: "Traitement d'Images", unit: "UET 1", exam: "img-exam", tp: "img-tp", moy: "img-moy", coef: 2, credits: 3 },
+        // Semestre 2
+        { name: "J2EE", unit: "UEF 3", exam: "j2ee-exam", tp: "j2ee-tp", moy: "j2ee-moy", coef: 3, credits: 5 },
+        { name: "BDDA", unit: "UEF 3", exam: "bdda-exam", tp: "bdda-tp", moy: "bdda-moy", coef: 3, credits: 4 },
+        { name: "Data Mining", unit: "UEF 4", exam: "data-mining-exam", tp: "data-mining-tp", moy: "data-mining-moy", coef: 3, credits: 6 },
+        { name: "Entrepôt de Données", unit: "UEF 4", exam: "entrepot-exam", tp: "entrepot-tp", moy: "entrepot-moy", coef: 2, credits: 3 },
+        { name: "Cryptographie", unit: "UEM 3", exam: "crypto-exam", td: "crypto-td", tp: "crypto-tp", moy: "crypto-moy", coef: 2, credits: 3 },
+        { name: "MEPS", unit: "UEM 3", exam: "meps-exam", td: "meps-td", moy: "meps-moy", coef: 2, credits: 3 },
+        { name: "VPO", unit: "UEM 3", exam: "vpo-exam", td: "vpo-td", moy: "vpo-moy", coef: 2, credits: 3 },
+        { name: "Culture d'entreprise", unit: "UED 1", exam: "culture-exam", moy: "culture-moy", coef: 1, credits: 2 },
+        { name: "Anglais", unit: "UET 2", exam: "anglais-exam", moy: "anglais-moy", coef: 1, credits: 1 }
+      ];
+
+      // Calculer les moyennes des modules
+      modules.forEach(module => {
+        const exam = parseFloat(document.getElementById(module.exam)?.value) || 0;
+        const td = parseFloat(document.getElementById(module.td)?.value) || 0;
+        const tp = parseFloat(document.getElementById(module.tp)?.value) || 0;
+        let moyenne;
+        if (module.td && module.tp) {
+          moyenne = exam * 0.6 + ((td + tp) / 2) * 0.4;
+        } else if (module.td) {
+          moyenne = exam * 0.6 + td * 0.4;
+        } else if (module.tp) {
+          moyenne = exam * 0.6 + tp * 0.4;
+        } else {
+          moyenne = exam;
+        }
+        const colorClass = moyenne >= 10 ? 'text-green-600' : 'text-red-600';
+        document.getElementById(module.moy).innerHTML = `<span class="${colorClass}">${moyenne.toFixed(2)}</span>`;
+        module.moyenne = moyenne;
+      });
+
+      // Définir les unités
+      const units = [
+        { name: "UEF 1", modules: ["Architecture Logicielle", "Réseaux Avancés"], coefTotal: 5, creditsTotal: 10, moyId: "uef1-moy", creditsId: "uef1-credits" },
+        { name: "UEF 2", modules: ["IA Apprentissage Automatique", "Analyse Stat de Données"], coefTotal: 5, creditsTotal: 8, moyId: "uef2-moy", creditsId: "uef2-credits" },
+        { name: "UEM 1", modules: ["Multimedia", "Optimisation Combinatoire"], coefTotal: 4, creditsTotal: 5, moyId: "uem1-moy", creditsId: "uem1-credits" },
+        { name: "UEM 2", modules: ["Système d'Aide à la Décision", "Méthodologies de Sécurité"], coefTotal: 3, creditsTotal: 4, moyId: "uem2-moy", creditsId: "uem2-credits" },
+        { name: "UET 1", modules: ["Traitement d'Images"], coefTotal: 2, creditsTotal: 3, moyId: "uet1-moy", creditsId: "uet1-credits" },
+        { name: "UEF 3", modules: ["J2EE", "BDDA"], coefTotal: 6, creditsTotal: 9, moyId: "uef3-moy", creditsId: "uef3-credits" },
+        { name: "UEF 4", modules: ["Data Mining", "Entrepôt de Données"], coefTotal: 5, creditsTotal: 9, moyId: "uef4-moy", creditsId: "uef4-credits" },
+        { name: "UEM 3", modules: ["Cryptographie", "MEPS", "VPO"], coefTotal: 6, creditsTotal: 9, moyId: "uem3-moy", creditsId: "uem3-credits" },
+        { name: "UED 1", modules: ["Culture d'entreprise"], coefTotal: 1, creditsTotal: 2, moyId: "ued1-moy", creditsId: "ued1-credits" },
+        { name: "UET 2", modules: ["Anglais"], coefTotal: 1, creditsTotal: 1, moyId: "uet2-moy", creditsId: "uet2-credits" }
+      ];
+
+      const semestre1Units = units.filter(u => ["UEF 1", "UEF 2", "UEM 1", "UEM 2", "UET 1"].includes(u.name));
+      const semestre2Units = units.filter(u => ["UEF 3", "UEF 4", "UEM 3", "UED 1", "UET 2"].includes(u.name));
+
+      function calculateUnit(unit) {
+        let sumMoyenne = 0;
+        let credits = 0;
+        unit.modules.forEach(modName => {
+          const module = modules.find(m => m.name === modName);
+          if (module.moyenne) {
+            sumMoyenne += module.moyenne * module.coef;
+            if (module.moyenne >= 10) {
+              credits += module.credits;
+            }
+          }
+        });
+        const moyenne = sumMoyenne / unit.coefTotal;
+        const unitCredits = moyenne >= 10 ? unit.creditsTotal : credits;
+        const colorClass = moyenne >= 10 ? 'text-green-600' : 'text-red-600';
+        document.getElementById(unit.moyId).innerHTML = `<span class="${colorClass}">${moyenne.toFixed(2)}</span>`;
+        document.getElementById(unit.creditsId).textContent = unitCredits;
+        return { moyenne, credits: unitCredits };
+      }
+
+      // Calculer moyennes et crédits par semestre
+      let semestre1Credits = 0;
+      let semestre1SumMoyenne = 0;
+      let semestre1CoefTotal = 0;
+      let semestre1Rattrapage = [];
+      semestre1Units.forEach(unit => {
+        const result = calculateUnit(unit);
+        if (result.moyenne < 10) {
+          unit.modules.forEach(modName => {
+            const module = modules.find(m => m.name === modName);
+            if (module.moyenne < 10) {
+              semestre1Rattrapage.push(modName);
+            }
+          });
+        }
+        semestre1Credits += result.credits;
+        semestre1SumMoyenne += unit.modules.reduce((sum, modName) => {
+          const module = modules.find(m => m.name === modName);
+          return sum + module.moyenne * module.coef;
+        }, 0);
+        semestre1CoefTotal += unit.coefTotal;
+      });
+      const semestre1Moyenne = (semestre1SumMoyenne / semestre1CoefTotal).toFixed(2);
+      if (semestre1Moyenne >= 10) {
+        semestre1Credits = 30;
+        semestre1Rattrapage = [];
+      }
+      const semestre1ColorClass = semestre1Moyenne >= 10 ? 'text-green-600' : 'text-red-600';
+      document.getElementById("semestre1-moyenne").innerHTML = `<span class="${semestre1ColorClass}">Moyenne: ${semestre1Moyenne}</span>`;
+      document.getElementById("semestre1-credits").textContent = `Crédits: ${semestre1Credits}`;
+
+      let semestre2Credits = 0;
+      let semestre2SumMoyenne = 0;
+      let semestre2CoefTotal = 0;
+      let semestre2Rattrapage = [];
+      semestre2Units.forEach(unit => {
+        const result = calculateUnit(unit);
+        if (result.moyenne < 10) {
+          unit.modules.forEach(modName => {
+            const module = modules.find(m => m.name === modName);
+            if (module.moyenne < 10) {
+              semestre2Rattrapage.push(modName);
+            }
+          });
+        }
+        semestre2Credits += result.credits;
+        semestre2SumMoyenne += unit.modules.reduce((sum, modName) => {
+          const module = modules.find(m => m.name === modName);
+          return sum + module.moyenne * module.coef;
+        }, 0);
+        semestre2CoefTotal += unit.coefTotal;
+      });
+      const semestre2Moyenne = (semestre2SumMoyenne / semestre2CoefTotal).toFixed(2);
+      if (semestre2Moyenne >= 10) {
+        semestre2Credits = 30;
+        semestre2Rattrapage = [];
+      }
+      const semestre2ColorClass = semestre2Moyenne >= 10 ? 'text-green-600' : 'text-red-600';
+      document.getElementById("semestre2-moyenne").innerHTML = `<span class="${semestre2ColorClass}">Moyenne: ${semestre2Moyenne}</span>`;
+      document.getElementById("semestre2-credits").textContent = `Crédits: ${semestre2Credits}`;
+
+      // Calculer moyenne annuelle et statut
+      const totalCredits = semestre1Credits + semestre2Credits;
+      const moyenneAnnuelle = ((semestre1SumMoyenne + semestre2SumMoyenne) / (semestre1CoefTotal + semestre2CoefTotal)).toFixed(2);
+      let statut = moyenneAnnuelle >= 10 ? "Admis session normale" : totalCredits >= 45 ? "Admis avec dettes" : "Ajourné";
+
+      // Afficher les résultats annuels
+      const annualColorClass = moyenneAnnuelle >= 10 ? 'text-green-600' : 'text-red-600';
+      document.getElementById("annual-results").innerHTML = `
+        <p><strong>Moyenne Annuelle :</strong> <span class="${annualColorClass}">${moyenneAnnuelle}</span></p>
+        <p><strong>Crédits Totaux :</strong> ${totalCredits}</p>
+        <p><strong>Statut :</strong> ${statut}</p>
+      `;
+      const allRattrapage = [...semestre1Rattrapage, ...semestre2Rattrapage];
+      document.getElementById("rattrapage").innerHTML = allRattrapage.length > 0 ? `
+        <p><strong>Modules à repasser :</strong> ${allRattrapage.join(", ")}</p>
+      ` : "";
+    }
+
+    function exportToPDF() {
+      const element = document.getElementById('releve');
+      // Appliquer des styles temporaires pour l'exportation
+      const tables = element.querySelectorAll('table');
+      const containers = element.querySelectorAll('.table-container');
+      tables.forEach(table => {
+        table.style.width = '100%';
+        table.style.tableLayout = 'auto';
+      });
+      containers.forEach(container => {
+        container.style.overflowX = 'visible';
+      });
+
+      const opt = {
+        margin: 5,
+        filename: 'releve_notes.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a3', orientation: 'landscape' }
+      };
+
+      html2pdf().from(element).set(opt).save().then(() => {
+        // Restaurer les styles originaux
+        tables.forEach(table => {
+          table.style.width = '';
+          table.style.tableLayout = '';
+        });
+        containers.forEach(container => {
+          container.style.overflowX = '';
+        });
+      });
+    }
+
+    function exportToJPG() {
+      const element = document.getElementById('releve');
+      html2canvas(element, { scale: 2, useCORS: true }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'releve_notes.jpg';
+        link.href = canvas.toDataURL('image/jpeg', 0.98);
+        link.click();
+      });
+    }
+  </script>
+</body>
+</html>
